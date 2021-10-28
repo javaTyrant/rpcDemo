@@ -1,8 +1,8 @@
 package com.demo.rpc.registry;
 
-import java.util.List;
-
 import org.apache.curator.x.discovery.ServiceInstance;
+
+import java.util.List;
 
 public interface Registry<T> {
 

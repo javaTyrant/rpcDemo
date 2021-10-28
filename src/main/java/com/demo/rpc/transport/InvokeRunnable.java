@@ -3,7 +3,6 @@ package com.demo.rpc.transport;
 import java.lang.reflect.Method;
 
 import com.demo.rpc.factory.BeanManager;
-import com.demo.rpc.protocol.Constants;
 import com.demo.rpc.protocol.Header;
 import com.demo.rpc.protocol.Message;
 import com.demo.rpc.protocol.Request;
