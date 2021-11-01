@@ -1,18 +1,20 @@
 package com.demo.rpc.transport;
 
 import com.demo.rpc.protocol.Message;
-
 import io.netty.channel.Channel;
 import io.netty.util.concurrent.Promise;
 
-public class NettyResponseFuture<T> {
+@SuppressWarnings("unused")
+public class NettyResponseFuture<T, R> {
     private long createTime;
     private long timeOut;
-    private Message request;
+    //请求.
+    private Message<R> request;
     private Channel channel;
+    //返回值.
     private Promise<T> promise;
 
-    public NettyResponseFuture(long createTime, long timeOut, Message request, Channel channel, Promise<T> promise) {
+    public NettyResponseFuture(long createTime, long timeOut, Message<R> request, Channel channel, Promise<T> promise) {
         this.createTime = createTime;
         this.timeOut = timeOut;
         this.request = request;
@@ -28,11 +30,11 @@ public class NettyResponseFuture<T> {
         this.timeOut = timeOut;
     }
 
-    public Message getRequest() {
+    public Message<R> getRequest() {
         return request;
     }
 
-    public void setRequest(Message request) {
+    public void setRequest(Message<R> request) {
         this.request = request;
     }
 

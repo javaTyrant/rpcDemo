@@ -1,7 +1,5 @@
 package com.demo.rpc.codec;
 
-import java.util.List;
-
 import com.demo.rpc.Constants;
 import com.demo.rpc.compress.Compressor;
 import com.demo.rpc.compress.CompressorFactory;
@@ -11,11 +9,13 @@ import com.demo.rpc.protocol.Request;
 import com.demo.rpc.protocol.Response;
 import com.demo.rpc.serialization.Serialization;
 import com.demo.rpc.serialization.SerializationFactory;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 
+import java.util.List;
+
+//Byte to Message
 public class DemoRpcDecoder extends ByteToMessageDecoder {
 
     protected void decode(ChannelHandlerContext ctx, ByteBuf byteBuf, List<Object> out) throws Exception {
@@ -61,7 +61,7 @@ public class DemoRpcDecoder extends ByteToMessageDecoder {
         }
         // 将上面读取到的消息头和消息体拼装成完整的Message并向后传递
         Header header = new Header(magic, version, extraInfo, messageId, size);
-        Message message = new Message(header, body);
+        Message<Object> message = new Message<>(header, body);
         out.add(message);
     }
 }

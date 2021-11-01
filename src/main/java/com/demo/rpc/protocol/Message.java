@@ -1,9 +1,10 @@
 package com.demo.rpc.protocol;
 
+@SuppressWarnings("unused")
 public class Message<T> {
-
+    //头信息
     private Header header;
-
+    //泛型.
     private T content;
 
 

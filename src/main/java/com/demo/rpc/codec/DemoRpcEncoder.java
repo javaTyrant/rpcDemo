@@ -7,12 +7,12 @@ import com.demo.rpc.protocol.Header;
 import com.demo.rpc.protocol.Message;
 import com.demo.rpc.serialization.Serialization;
 import com.demo.rpc.serialization.SerializationFactory;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
 /**
+ * Message To Byte
  * Created on 2020-06-19
  */
 public class DemoRpcEncoder extends MessageToByteEncoder<Message> {
@@ -27,6 +27,7 @@ public class DemoRpcEncoder extends MessageToByteEncoder<Message> {
         byteBuf.writeByte(header.getExtraInfo());
         byteBuf.writeLong(header.getMessageId());
         Object content = message.getContent();
+        //是否是心跳
         if (Constants.isHeartBeat(header.getExtraInfo())) {
             byteBuf.writeInt(0); // 心跳消息，没有消息体，这里写入0
             return;

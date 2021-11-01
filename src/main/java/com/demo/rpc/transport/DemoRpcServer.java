@@ -2,14 +2,9 @@ package com.demo.rpc.transport;
 
 import com.demo.rpc.codec.DemoRpcDecoder;
 import com.demo.rpc.codec.DemoRpcEncoder;
-
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
@@ -17,13 +12,13 @@ import io.netty.handler.logging.LoggingHandler;
 
 public class DemoRpcServer {
 
-    private EventLoopGroup bossGroup;
-    private EventLoopGroup workerGroup;
-    private ServerBootstrap serverBootstrap;
+    private final EventLoopGroup bossGroup;
+    private final EventLoopGroup workerGroup;
+    private final ServerBootstrap serverBootstrap;
     private Channel channel;
     protected int port;
 
-    public DemoRpcServer(int port) throws InterruptedException {
+    public DemoRpcServer(int port) {
         this.port = port;
         // 创建boss和worker两个EventLoopGroup，注意一些小细节，
         // workerGroup 是按照中的线程数是按照 CPU 核数计算得到的
@@ -37,8 +32,10 @@ public class DemoRpcServer {
                 .option(ChannelOption.SO_REUSEADDR, Boolean.TRUE)
                 .childOption(ChannelOption.TCP_NODELAY, Boolean.TRUE)
                 .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
+                //
+                .handler(new LoggingHandler(LogLevel.INFO))
                 // 指定每个Channel上注册的ChannelHandler以及顺序
-                .handler(new LoggingHandler(LogLevel.INFO)).childHandler(
+                .childHandler(
                         new ChannelInitializer<SocketChannel>() {
                             @Override
                             protected void initChannel(SocketChannel ch) throws Exception {
@@ -49,7 +46,7 @@ public class DemoRpcServer {
                         });
     }
 
-    public ChannelFuture start() throws InterruptedException {
+    public ChannelFuture start() {
         // 监听指定的端口
         ChannelFuture channelFuture = serverBootstrap.bind(port);
         channel = channelFuture.channel();
@@ -58,7 +55,7 @@ public class DemoRpcServer {
     }
 
 
-    public void startAndWait() throws InterruptedException {
+    public void startAndWait() {
         try {
             channel.closeFuture().await();
         } catch (InterruptedException e) {

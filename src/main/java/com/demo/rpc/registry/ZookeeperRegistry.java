@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 public class ZookeeperRegistry<T> implements Registry<T> {
 
-    private Map<String, List<ServiceInstanceListener<T>>> listeners = Maps.newConcurrentMap();
+    private final Map<String, List<ServiceInstanceListener<T>>> listeners = Maps.newConcurrentMap();
 
     private InstanceSerializer serializer = new JsonInstanceSerializer<>(ServerInfo.class);
 
@@ -25,9 +25,11 @@ public class ZookeeperRegistry<T> implements Registry<T> {
 
     private ServiceCache<T> serviceCache;
 
-    private String address = "localhost:2181";
+    private static final String address = "localhost:2181";
 
+    @SuppressWarnings("unchecked")
     public void start() throws Exception {
+        //路径.
         String root = "/demo/rpc";
         // 初始化CuratorFramework
         CuratorFramework client = CuratorFrameworkFactory.newClient(address, new ExponentialBackoffRetry(1000, 3));
@@ -36,16 +38,17 @@ public class ZookeeperRegistry<T> implements Registry<T> {
 
         // 初始化ServiceDiscovery
         serviceDiscovery = ServiceDiscoveryBuilder.builder(ServerInfo.class)
-                .client(client).basePath(root)
+                .client(client)
+                .basePath(root)
                 .serializer(serializer)
                 .build();
         serviceDiscovery.start(); // 启动ServiceDiscovery
 
-        // 创建ServiceCache，监Zookeeper相应节点的变化，也方便后续的读取
+        //创建ServiceCache，监Zookeeper相应节点的变化，也方便后续的读取
         serviceCache = serviceDiscovery.serviceCacheBuilder()
                 .name("/demoService")
                 .build();
-//        client.start(); // 启动Curator客户端
+        //client.start(); // 启动Curator客户端
         client.blockUntilConnected();  // 阻塞当前线程，等待连接成功
         serviceDiscovery.start(); // 启动ServiceDiscovery
         serviceCache.start(); // 启动ServiceCache
@@ -57,14 +60,15 @@ public class ZookeeperRegistry<T> implements Registry<T> {
     }
 
     @Override
-    public void unregisterService(ServiceInstance service) throws Exception {
+    public void unregisterService(ServiceInstance<T> service) throws Exception {
         serviceDiscovery.unregisterService(service);
     }
 
     @Override
     public List<ServiceInstance<T>> queryForInstances(String name) throws Exception {
         // 直接根据name进行过滤ServiceCache中的缓存数据
-        return serviceCache.getInstances().stream()
+        return serviceCache.getInstances()
+                .stream()
                 .filter(s -> s.getName().equals(name))
                 .collect(Collectors.toList());
     }

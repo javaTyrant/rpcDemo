@@ -19,8 +19,8 @@ public class DemoRpcClient implements Closeable {
 
     protected Bootstrap clientBootstrap;
     protected EventLoopGroup group;
-    private String host;
-    private int port;
+    private final String host;
+    private final int port;
 
     public DemoRpcClient(String host, int port) {
         this.host = host;
@@ -36,7 +36,7 @@ public class DemoRpcClient implements Closeable {
                 // 指定ChannelHandler的顺序
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
-                    protected void initChannel(SocketChannel ch) throws Exception {
+                    protected void initChannel(SocketChannel ch) {
                         ch.pipeline().addLast("demo-rpc-encoder", new DemoRpcEncoder());
                         ch.pipeline().addLast("demo-rpc-decoder", new DemoRpcDecoder());
                         ch.pipeline().addLast("client-handler", new DemoRpcClientHandler());
