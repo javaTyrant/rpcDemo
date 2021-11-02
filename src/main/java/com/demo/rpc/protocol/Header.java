@@ -2,11 +2,16 @@ package com.demo.rpc.protocol;
 
 public class Header {
 
-    private short magic; // 魔数
-    private byte version; // 版本号
-    private byte extraInfo; // 附加信息
-    private Long messageId; // 消息ID
-    private Integer size; // 消息体长度
+    // 魔数
+    private short magic;
+    // 版本号
+    private byte version;
+    // 附加信息
+    private byte extraInfo;
+    // 消息ID
+    private Long messageId;
+    // 消息体长度
+    private Integer size;
 
     public Header(short magic, byte version) {
         this.magic = magic;

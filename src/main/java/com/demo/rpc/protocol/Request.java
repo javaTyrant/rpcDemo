@@ -6,13 +6,17 @@ import java.util.Arrays;
 @SuppressWarnings("unused")
 public class Request implements Serializable {
 
-    private String serviceName; // 请求的Service类名
+    // 请求的Service类名
+    private String serviceName;
 
-    private String methodName; // 请求的方法名称
+    // 请求的方法名称
+    private String methodName;
 
-    private Class[] argTypes; // 请求方法的参数类型
+    // 请求方法的参数类型
+    private Class[] argTypes;
 
-    private Object[] args; // 请求方法的参数
+    // 请求方法的参数
+    private Object[] args;
 
     public String getServiceName() {
         return serviceName;

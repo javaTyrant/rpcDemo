@@ -1,6 +1,5 @@
 package com.demo.rpc.registry;
 
-import com.google.common.collect.Maps;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.ExponentialBackoffRetry;
@@ -12,17 +11,17 @@ import org.apache.curator.x.discovery.details.InstanceSerializer;
 import org.apache.curator.x.discovery.details.JsonInstanceSerializer;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ZookeeperRegistry<T> implements Registry<T> {
 
-    private final Map<String, List<ServiceInstanceListener<T>>> listeners = Maps.newConcurrentMap();
+    //private final Map<String, List<ServiceInstanceListener<T>>> listeners = Maps.newConcurrentMap();
 
-    private InstanceSerializer serializer = new JsonInstanceSerializer<>(ServerInfo.class);
+    private final InstanceSerializer serializer = new JsonInstanceSerializer<>(ServerInfo.class);
 
+    //
     private ServiceDiscovery<T> serviceDiscovery;
-
+    //
     private ServiceCache<T> serviceCache;
 
     private static final String address = "localhost:2181";
@@ -33,7 +32,8 @@ public class ZookeeperRegistry<T> implements Registry<T> {
         String root = "/demo/rpc";
         // 初始化CuratorFramework
         CuratorFramework client = CuratorFrameworkFactory.newClient(address, new ExponentialBackoffRetry(1000, 3));
-        client.start();  // 启动Curator客户端
+        // 启动Curator客户端
+        client.start();
         // client.createContainers(root);
 
         // 初始化ServiceDiscovery
@@ -42,16 +42,19 @@ public class ZookeeperRegistry<T> implements Registry<T> {
                 .basePath(root)
                 .serializer(serializer)
                 .build();
-        serviceDiscovery.start(); // 启动ServiceDiscovery
-
         //创建ServiceCache，监Zookeeper相应节点的变化，也方便后续的读取
         serviceCache = serviceDiscovery.serviceCacheBuilder()
                 .name("/demoService")
                 .build();
-        //client.start(); // 启动Curator客户端
-        client.blockUntilConnected();  // 阻塞当前线程，等待连接成功
-        serviceDiscovery.start(); // 启动ServiceDiscovery
-        serviceCache.start(); // 启动ServiceCache
+        //可以添加监听点.
+        //serviceCache.addListener();
+
+        // 阻塞当前线程，等待连接成功
+        client.blockUntilConnected();
+        // 启动ServiceDiscovery
+        serviceDiscovery.start();
+        // 启动ServiceCache
+        serviceCache.start();
     }
 
     @Override
@@ -65,7 +68,7 @@ public class ZookeeperRegistry<T> implements Registry<T> {
     }
 
     @Override
-    public List<ServiceInstance<T>> queryForInstances(String name) throws Exception {
+    public List<ServiceInstance<T>> queryForInstances(String name) {
         // 直接根据name进行过滤ServiceCache中的缓存数据
         return serviceCache.getInstances()
                 .stream()
