@@ -1,11 +1,8 @@
 package com.demo.rpc.transport;
 
-import java.io.Closeable;
-
 import com.demo.rpc.Constants;
 import com.demo.rpc.codec.DemoRpcDecoder;
 import com.demo.rpc.codec.DemoRpcEncoder;
-
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFuture;
@@ -14,6 +11,8 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+
+import java.io.Closeable;
 
 public class DemoRpcClient implements Closeable {
 
@@ -38,7 +37,9 @@ public class DemoRpcClient implements Closeable {
                     @Override
                     protected void initChannel(SocketChannel ch) {
                         ch.pipeline().addLast("demo-rpc-encoder", new DemoRpcEncoder());
+                        //解码服务器传过来的加密内容
                         ch.pipeline().addLast("demo-rpc-decoder", new DemoRpcDecoder());
+                        //
                         ch.pipeline().addLast("client-handler", new DemoRpcClientHandler());
                     }
                 });

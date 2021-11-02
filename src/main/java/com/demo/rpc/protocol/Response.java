@@ -3,6 +3,7 @@ package com.demo.rpc.protocol;
 
 import java.io.Serializable;
 
+@SuppressWarnings("unused")
 public class Response implements Serializable {
 
     private int code = 0; // 响应的错误码，正常响应为0，非0表示异常响应

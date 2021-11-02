@@ -36,7 +36,9 @@ public class DemoRpcEncoder extends MessageToByteEncoder<Message> {
         Serialization serialization = SerializationFactory.get(header.getExtraInfo());
         Compressor compressor = CompressorFactory.get(header.getExtraInfo());
         byte[] payload = compressor.compress(serialization.serialize(content));
-        byteBuf.writeInt(payload.length); // 写入消息体长度
-        byteBuf.writeBytes(payload); // 写入消息体
+        // 写入消息体长度
+        byteBuf.writeInt(payload.length);
+        // 写入消息体
+        byteBuf.writeBytes(payload);
     }
 }

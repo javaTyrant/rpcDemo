@@ -76,7 +76,7 @@ public class DemoRpcProxy implements InvocationHandler {
         Connection connection = new Connection(channelFuture, true);
         //
         NettyResponseFuture<Response, Request> responseFuture = connection.request(message, Constants.DEFAULT_TIMEOUT);
-        // 等待请求对应的响应
+        // 等待请求对应的响应,setSuccess会通知这里.
         result = responseFuture.getPromise().get(Constants.DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS);
         return result;
     }

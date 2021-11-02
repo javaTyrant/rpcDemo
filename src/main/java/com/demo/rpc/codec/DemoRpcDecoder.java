@@ -18,6 +18,7 @@ import java.util.List;
 //Byte to Message
 public class DemoRpcDecoder extends ByteToMessageDecoder {
 
+    //decode是在哪个阶段发生的,此时服务器有encode吗?
     protected void decode(ChannelHandlerContext ctx, ByteBuf byteBuf, List<Object> out) throws Exception {
         if (byteBuf.readableBytes() < Constants.HEADER_SIZE) {
             return; // 不到16字节的话无法解析消息头，暂不读取

@@ -3,6 +3,7 @@ package com.demo.rpc.protocol;
 import java.io.Serializable;
 import java.util.Arrays;
 
+@SuppressWarnings("unused")
 public class Request implements Serializable {
 
     private String serviceName; // 请求的Service类名
