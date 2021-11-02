@@ -15,10 +15,13 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import java.io.Closeable;
 
 public class DemoRpcClient implements Closeable {
-
+    //
     protected Bootstrap clientBootstrap;
+    //
     protected EventLoopGroup group;
+    //
     private final String host;
+    //
     private final int port;
 
     public DemoRpcClient(String host, int port) {

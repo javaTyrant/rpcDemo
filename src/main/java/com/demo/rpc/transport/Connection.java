@@ -65,7 +65,7 @@ public class Connection implements Closeable {
         //将消息ID和关联的Future记录到IN_FLIGHT_REQUEST_MAP集合中
         IN_FLIGHT_REQUEST_MAP.put(messageId, responseFuture);
         try {
-            //发送请求.服务端会
+            //发送请求.跟服务端通信.
             future.channel().writeAndFlush(message);
         } catch (Exception e) {
             // 发送请求异常时，删除对应的Future

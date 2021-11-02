@@ -71,6 +71,7 @@ public class DemoRpcProxy implements InvocationHandler {
         Object result;
         // 创建DemoRpcClient连接指定的Server端
         DemoRpcClient demoRpcClient = new DemoRpcClient(serverInfo.getHost(), serverInfo.getPort());
+        //客户端连接服务器.
         ChannelFuture channelFuture = demoRpcClient.connect().awaitUninterruptibly();
         // 创建对应的Connection对象，并发送请求
         Connection connection = new Connection(channelFuture, true);

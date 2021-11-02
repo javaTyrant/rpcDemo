@@ -8,10 +8,12 @@ import io.netty.channel.SimpleChannelInboundHandler;
 
 public class DemoRpcClientHandler extends SimpleChannelInboundHandler<Message<Response>> {
 
+    //客户端收到消息后,通知remoteCall,responseFuture.getPromise().get().
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Message<Response> message) {
-        //
+        //移除future.
         NettyResponseFuture responseFuture = Connection.IN_FLIGHT_REQUEST_MAP.remove(message.getHeader().getMessageId());
+        //
         Response response = message.getContent();
         // 心跳消息特殊处理
         if (response == null && Constants.isHeartBeat(message.getHeader().getExtraInfo())) {
